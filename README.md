@@ -1,6 +1,7 @@
 # omar-download
 [![Build Status](https://jenkins.radiantbluecloud.com/buildStatus/icon?job=omar-download-dev)]()
-The Download Web Service takes multiple images or image groups specified in a JSON and return a zip archive.
+
+####The Download Web Service takes multiple images or image groups specified in a JSON and return a zip archive.
 
 ### Required environment variable
 - OMAR_COMMON_PROPERTIES
