@@ -1,6 +1,6 @@
 # omar-download
-
 [![Build Status](https://jenkins.radiantbluecloud.com/buildStatus/icon?job=omar-download-dev)]()
+The Download Web Service takes multiple images or image groups specified in a JSON and return a zip archive.
 
 Git clone or git pull the omar-common repo.
 ```

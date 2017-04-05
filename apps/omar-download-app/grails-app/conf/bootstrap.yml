@@ -1,6 +1,6 @@
 spring:
   application:
-    name: o2-download
+    name: omar-download
   cloud:
     config:
       enabled: false
