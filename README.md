@@ -49,3 +49,5 @@ Only required for Jenkins pipelines or if you are running Artifactory and/or Ope
  cd omar-download/apps/omar-download-app
  ./gradlew clean install
 ```
+
+...
