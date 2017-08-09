@@ -23,7 +23,7 @@ buildscript {
           "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar /home/omar",
           "WORKDIR /home/omar",
           "expose 8080",
-          "USER 1001"
+          "USER 1001",
           "CMD /home/omar/run.sh"
        ]
      }
