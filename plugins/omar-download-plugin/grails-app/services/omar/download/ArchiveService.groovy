@@ -6,13 +6,11 @@ import grails.converters.JSON
 
 import java.util.ArrayList
 
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 import org.springframework.cloud.netflix.hystrix.EnableHystrix
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
 
 
 @EnableHystrix
-@EnableCircuitBreaker
 @Transactional
 class ArchiveService {
 
