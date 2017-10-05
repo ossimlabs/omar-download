@@ -4,10 +4,10 @@ import grails.boot.*
 import grails.boot.config.GrailsAutoConfiguration
 import grails.plugins.metadata.*
 
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.netflix.hystrix.EnableHystrix
-import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard
 
-@EnableHystrixDashboard
+@EnableDiscoveryClient
 @EnableHystrix
 @PluginSource
 class Application extends GrailsAutoConfiguration {
