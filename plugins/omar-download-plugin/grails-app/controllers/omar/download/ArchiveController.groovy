@@ -1,9 +1,12 @@
 package omar.download
 
-import com.wordnik.swagger.annotations.Api
-import com.wordnik.swagger.annotations.ApiImplicitParam
-import com.wordnik.swagger.annotations.ApiImplicitParams
-import com.wordnik.swagger.annotations.ApiOperation
+// import com.wordnik.swagger.annotations.Api
+// import com.wordnik.swagger.annotations.ApiImplicitParam
+// import com.wordnik.swagger.annotations.ApiImplicitParams
+// import com.wordnik.swagger.annotations.ApiOperation
+
+import io.swagger.annotations.*
+
 import groovy.json.JsonSlurper
 import omar.core.BindUtil
 
