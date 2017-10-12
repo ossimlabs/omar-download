@@ -8,6 +8,7 @@ import java.util.ArrayList
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
 
+@Service
 @Transactional
 class ArchiveService {
 
@@ -98,7 +99,7 @@ class ArchiveService {
         result
     }
 
-    String downloadFailure()
+    String downloadFailure(def response, FileDownloadCommand cmd)
     {
         return "Files failed to download."
     }
