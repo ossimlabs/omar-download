@@ -95,12 +95,12 @@ Example of a accepted single and multiple file groups</strong>
     def download() {
         def jsonData = request.JSON?request.JSON as HashMap:null
         def fileInfoParams = params.fileInfo?params.fileInfo:null
-        def requestParams = params - params.subMap(['controller', 'format', 'action'])
+        def requestParams = params - params.subMap(['fileInfo','controller', 'format', 'action'])
         def cmd = new FileDownloadCommand()
         if (fileInfoParams)
         {
             def slurper = new groovy.json.JsonSlurper()
-            jsonData = slurper.parseText("${fileInfoParams}")
+            jsonData = slurper.parseText(fileInfoParams)
         }
 
         if(jsonData) requestParams << jsonData
