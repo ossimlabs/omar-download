@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 @Api(
-        value = "download",
+        value = "archive",
         description = "API operations for Download IO",
         produces = 'application/json',
         consumes = 'application/json'
@@ -35,52 +35,37 @@ class ArchiveController {
             produces='application/json',
             httpMethod="POST",
             notes="""
-            <ul>
-                <li>
-                    Currently, only the download type and the zip archive options type are supported.
-                </li>
-                </br>
-                <li>
-                    The zip file name is optional and will use a preset file name if one is not entered.</br>
-                    When entering a zip file name, be sure to enter a ".zip" extension (ex. myimages.zip).
-                </li>
-                </br>
-                <li>
-                    Enter a file groups root directory if you wish to keep the directory structure when you
-                    unzip your zip file.</br>
-                    File group files is a list of paths to files or folders that contain the inage information.</br>
-                    here can be single or multiple file groups.
+- Currently, only the download type and the zip archive options type are supported.
+- The zip file name is optional and will use a preset file name if one is not entered. 
+  When entering a zip file name, be sure to enter a ".zip" extension (ex. myimages.zip).
+- Enter a file groups root directory if you wish to keep the directory structure when you
+  unzip your zip file.  File group files is a list of paths to files or folders that contain the inage information.
+  here can be single or multiple file groups.
 
-                    </br>
-                    <pre>
+Example of a accepted single and multiple file groups</strong>
+```
+        "fileGroups":
+            [
+                {
+                    "rootDirectory":"",
+                    "files":["","",...]
+                }
+            ]
 
-                    <strong>Example of a accepted single and multiple file groups</strong>
+            OR
 
-                        "fileGroups":
-                            [
-                                {
-                                    "rootDirectory":"",
-                                    "files":["","",...]
-                                }
-                            ]
-
-                            OR
-
-                        "fileGroups":
-                            [
-                                {
-                                    "rootDirectory":"",
-                                    "files":["","",...]
-                                }
-                                {
-                                    "rootDirectory":"",
-                                    "files":["","",...]
-                                }
-                            ]
-                    </pre>
-                </li>
-            </ul>
-        """)
+        "fileGroups":
+            [
+                {
+                    "rootDirectory":"",
+                    "files":["","",...]
+                }
+                {
+                    "rootDirectory":"",
+                    "files":["","",...]
+                }
+            ]
+```""")
 
     @ApiImplicitParams([
         @ApiImplicitParam(
