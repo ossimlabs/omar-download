@@ -30,11 +30,12 @@ class ArchiveService {
 
         if (cmd.validate())
         {
+
             try
             {
                 if ((cmd.type?.toLowerCase() == "download") || (cmd.type == null))
                 {
-                    if((cmd.archiveOptions["type"].toString().toLowerCase() == "zip") || (cmd.archiveOptions["type"] == null))
+                    if(cmd.isZip())
                     {
                         if(cmd.fileGroups.size()>=1)
                         {

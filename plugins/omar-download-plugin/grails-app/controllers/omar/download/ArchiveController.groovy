@@ -97,7 +97,6 @@ Example of a accepted single and multiple file groups</strong>
         def fileInfoParams = params.fileInfo?params.fileInfo:null
         def requestParams = params - params.subMap(['controller', 'format', 'action'])
         def cmd = new FileDownloadCommand()
-
         if (fileInfoParams)
         {
             def slurper = new groovy.json.JsonSlurper()
