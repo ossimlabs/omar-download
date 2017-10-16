@@ -42,7 +42,7 @@ class ArchiveController {
   unzip your zip file.  File group files is a list of paths to files or folders that contain the inage information.
   here can be single or multiple file groups.
 
-Example of a accepted single and multiple file groups</strong>
+Example of a accepted single and multiple file groups
 ```
         "fileGroups":
             [
@@ -65,34 +65,40 @@ Example of a accepted single and multiple file groups</strong>
                     "files":["","",...]
                 }
             ]
-```""")
+```
+Example:
+```
+{
+    "type":"Download",
+    "zipFileName": "",
+    "archiveOptions":
+    {
+        "type": "zip"
+    },
+    "fileGroups":
+    [
+        {
+            "rootDirectory":"",
+            "files":["",""]
+        }
+    ]
+}
+```
+""")
 
     @ApiImplicitParams([
         @ApiImplicitParam(
                 name = 'body',
                 value = "General Message for querying recommendations",
                 defaultValue = """
-                {
-                    "type":"Download",
-                    "zipFileName": "",
-                    "archiveOptions":
-                    {
-                        "type": "zip"
-                    },
-                    "fileGroups":
-                    [
-                        {
-                            "rootDirectory":"",
-                            "files":["",""]
-                        }
-                    ]
-                }""",
+""",
                 paramType = 'body',
                 dataType = 'string'
             )
     ])
 
     def download() {
+        println params
         def jsonData = request.JSON?request.JSON as HashMap:null
         def fileInfoParams = params.fileInfo?params.fileInfo:null
         def requestParams = params - params.subMap(['controller', 'format', 'action'])
