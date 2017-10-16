@@ -141,23 +141,28 @@ class ZipFiles {
 
         byte[] readBuffer = new byte[2048];
         int bytesIn = 0
+        try{
 
-        varFileInfo.each{ zipFilePath->
+            varFileInfo.each{ zipFilePath->
 
-            FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] );
+                FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] );
 
-            ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" );
+                ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" );
 
-            zos.putNextEntry( anEntry );
+                zos.putNextEntry( anEntry );
 
-            while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
-            {
-                zos.write( readBuffer, 0, bytesIn );
+                while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
+                {
+                    zos.write( readBuffer, 0, bytesIn );
+                }
+
+                fis.close();
             }
-
-            fis.close();
         }
-
+        catch(e)
+        {
+            log.error(e.toString());
+        }
         zos.close();
     }
 }
