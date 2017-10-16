@@ -17,9 +17,26 @@ class FileDownloadCommand implements Validateable
     static constraints = {
 
         type(nullable:true)
-        archiveOptions()
+        archiveOptions(nullable:true)
         fileGroups()
         zipFileName(nullable:true)
+    }
+
+    Boolean isZip()
+    {
+        Boolean result = true;
+
+        if(archiveOptions)
+        {
+            String type = archiveOptions["type"]?.toString().toLowerCase()
+
+            if(type!="zip")
+            {
+                result = false;
+            }
+        }
+
+        result
     }
 
 }
