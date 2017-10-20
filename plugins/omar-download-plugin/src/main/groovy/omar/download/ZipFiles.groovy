@@ -156,7 +156,8 @@ class ZipFiles {
                     zos.write( readBuffer, 0, bytesIn );
                 }
 
-                fis.close();
+                zos.closeEntry()
+                fis.close()
             }
         }
         catch(e)
