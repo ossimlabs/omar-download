@@ -148,13 +148,14 @@ class ZipFiles {
                 FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] )
                 ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" )
 
-                println "${zipFilePath["fileFullPath"]}"
-                println "${zipFilePath["zipEntryPath"]}"
                 zos.putNextEntry( anEntry )
 
-                while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
-                {
-                    zos.write( readBuffer, 0, bytesIn )
+                if (fis.getFD().valid()==true){
+                    while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
+                    {
+                        println "${fis.getFD().valid()}"
+                        zos.write( readBuffer, 0, bytesIn )
+                    }
                 }
                 zos.closeEntry()
                 fis.close()
