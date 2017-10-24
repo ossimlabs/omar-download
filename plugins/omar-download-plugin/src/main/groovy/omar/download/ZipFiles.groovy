@@ -142,29 +142,26 @@ class ZipFiles {
         byte[] readBuffer = new byte[2048]
         int bytesIn = 0
         try{
-
             varFileInfo.each{ zipFilePath->
 
                 FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] )
                 ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" )
 
                 zos.putNextEntry( anEntry )
-
-                if (fis.getFD().valid()==true){
-                    while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
-                    {
-                        println "${fis.getFD().valid()}"
-                        zos.write( readBuffer, 0, bytesIn )
-                    }
+                while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
+                {
+                    zos.write( readBuffer, 0, bytesIn )
                 }
                 zos.closeEntry()
                 fis.close()
+                println "file closed"
             }
+            zos.close()
+            println "stream closed"
         }
         catch(e)
         {
             log.error(e.toString())
         }
-        zos.close()
     }
 }
