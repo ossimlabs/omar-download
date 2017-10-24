@@ -154,14 +154,12 @@ class ZipFiles {
                 }
                 zos.closeEntry()
                 fis.close()
-                println "file closed"
             }
-            zos.close()
-            println "stream closed"
         }
         catch(e)
         {
             log.error(e.toString())
         }
+        zos.close()
     }
 }
