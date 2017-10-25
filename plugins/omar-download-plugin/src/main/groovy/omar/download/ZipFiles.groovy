@@ -151,7 +151,7 @@ class ZipFiles {
 
                 zos.putNextEntry( anEntry )
                 println "added next entry to zos"
-                while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
+                while ( ( bytesIn = fis.read( readBuffer ) ) > 0 )
                 {
                     println "bytesIn: ${bytesIn}"
                     zos.write( readBuffer, 0, bytesIn )
@@ -167,6 +167,10 @@ class ZipFiles {
             log.error(e.toString())
         }
         catch (NullPointerException e)
+        {
+            log.error(e.toString())
+        }
+        catch (e)
         {
             log.error(e.toString())
         }
