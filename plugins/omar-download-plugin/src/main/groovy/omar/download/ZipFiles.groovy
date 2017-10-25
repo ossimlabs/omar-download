@@ -136,7 +136,7 @@ class ZipFiles {
      * @param    varOutputStream (OutputStream)
      *
      ****************************************************************/
-    void zip(ArrayList varFileInfo, OutputStream varOutputStream)
+    synchronized void zip(ArrayList varFileInfo, OutputStream varOutputStream)
     {
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
@@ -151,12 +151,10 @@ class ZipFiles {
 
                 zos.putNextEntry( anEntry )
                 println "added next entry to zos"
-                synchronized(this) {
-                    while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
-                    {
-                        println "bytesIn: ${bytesIn}"
-                        zos.write( readBuffer, 0, bytesIn )
-                    }
+                while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
+                {
+                    println "bytesIn: ${bytesIn}"
+                    zos.write( readBuffer, 0, bytesIn )
                 }
                 zos.closeEntry()
                 println "closed zos entry"
