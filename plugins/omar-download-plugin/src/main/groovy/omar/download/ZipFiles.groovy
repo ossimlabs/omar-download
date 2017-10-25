@@ -136,7 +136,7 @@ class ZipFiles {
      * @param    varOutputStream (OutputStream)
      *
      ****************************************************************/
-    synchronized void zip(ArrayList varFileInfo, OutputStream varOutputStream)
+    void zip(ArrayList varFileInfo, OutputStream varOutputStream)
     {
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
@@ -162,21 +162,13 @@ class ZipFiles {
                 println "closed fis"
             }
         }
-        catch(IOException e)
-        {
-            log.error(e.toString())
-        }
-        catch (NullPointerException e)
-        {
-            log.error(e.toString())
-        }
         catch (e)
         {
             log.error(e.toString())
         }
         finally
         {
-             zos.close()
+            zos.close()
             println "closed zos"
         }
     }
