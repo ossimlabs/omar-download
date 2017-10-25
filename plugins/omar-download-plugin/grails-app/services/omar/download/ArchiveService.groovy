@@ -41,17 +41,19 @@ class ArchiveService {
                             response.setHeader("Content-Disposition", "attachment;filename=${fileName}");
                             response.setHeader("Set-Cookie", "fileDownload=true; path=/");
                             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-                            if(cmd.fileGroups.size()==1)
-                            {
-                                HashMap listOfFilesAsMaps = cmd.fileGroups
-                                ZipFiles zipFiles = new ZipFiles()
-                                zipFiles.zipSingle(listOfFilesAsMaps, response.outputStream)
-                            }
-                            else
-                            {
-                                ArrayList listOfFilesAsMaps = cmd.fileGroups
-                                ZipFiles zipFiles = new ZipFiles()
-                                zipFiles.zipMulti(listOfFilesAsMaps, response.outputStream)
+                            synchronized(this) {
+                                if(cmd.fileGroups.size()==1)
+                                {
+                                    HashMap listOfFilesAsMaps = cmd.fileGroups
+                                    ZipFiles zipFiles = new ZipFiles()
+                                    zipFiles.zipSingle(listOfFilesAsMaps, response.outputStream)
+                                }
+                                else
+                                {
+                                    ArrayList listOfFilesAsMaps = cmd.fileGroups
+                                    ZipFiles zipFiles = new ZipFiles()
+                                    zipFiles.zipMulti(listOfFilesAsMaps, response.outputStream)
+                                }
                             }
                         }
                         else
