@@ -16,6 +16,7 @@ import omar.core.HttpStatus
  */
 @Slf4j
 class ZipFiles {
+    static final int BUFFER_SIZE = 2048
 
     /***********************************************************
      *
@@ -139,30 +140,40 @@ class ZipFiles {
     {
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
-        byte[] readBuffer = new byte[2048]
+        byte[] readBuffer = new byte[BUFFER_SIZE]
         int bytesIn = 0
         try{
             varFileInfo.each{ zipFilePath->
 
                 FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] )
+                println "created fis for ${zipFilePath["fileFullPath"]}"
                 ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" )
 
                 zos.putNextEntry( anEntry )
+                println "added next entry to zos"
                 while ( ( bytesIn = fis.read( readBuffer ) ) != -1 )
                 {
+                    println "bytesIn: ${bytesIn}"
                     zos.write( readBuffer, 0, bytesIn )
                 }
                 zos.closeEntry()
+                println "closed zos entry"
                 fis.close()
+                println "closed fis"
             }
         }
-        catch(e)
+        catch(IOException e)
+        {
+            log.error(e.toString())
+        }
+        catch (NullPointerException e)
         {
             log.error(e.toString())
         }
         finally
         {
              zos.close()
+            println "closed zos"
         }
     }
 }
