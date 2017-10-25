@@ -160,6 +160,9 @@ class ZipFiles {
         {
             log.error(e.toString())
         }
-        zos.close()
+        finally
+        {
+             zos.close()
+        }
     }
 }
