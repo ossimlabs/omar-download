@@ -153,7 +153,6 @@ class ZipFiles {
                 println "added next entry to zos"
                 while ( ( bytesIn = fis.read( readBuffer ) ) > 0 )
                 {
-                    println "bytesIn: ${bytesIn}"
                     zos.write( readBuffer, 0, bytesIn )
                 }
                 zos.closeEntry()
