@@ -6,12 +6,12 @@ import grails.converters.JSON
 
 import java.util.ArrayList
 
-//import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
 
 @Transactional
 class ArchiveService {
 
-    //@HystrixCommand(fallbackMethod = "downloadFailure")
+    @HystrixCommand
     def download(def response, FileDownloadCommand cmd)
     {
         HashMap result = [
@@ -98,9 +98,4 @@ class ArchiveService {
 
         result
     }
-
-    //String downloadFailure(def response, FileDownloadCommand cmd)
-    //{
-    //    return "Files failed to download."
-    //}
 }
