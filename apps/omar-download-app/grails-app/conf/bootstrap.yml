@@ -7,9 +7,44 @@ spring:
       uri: http://localhost:8888/omar-config-server
     discovery:
       enabled: false
+  boot:
+    admin:
+      url: http://localhost:8082/omar-admin-server/
+management:
+  contextPath: '/omar-admin-server/mgmt'
+  security:
+    enabled: false
+
 ---
 spring:
   profiles: production
   cloud:
     config:
       uri: http://omar-config-server:8888/omar-config-server
+  boot:
+    admin:
+      url: http://omar-admin-server:8080/omar-admin-server
+management:
+  contextPath: '/omar-admin-server/mgmt'
+
+---
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_SERVER_URL:localhost}:8761/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    metadataMap:
+      management:
+        contextPath: ${management.context-path}
+# ---
+# spring:
+#   boot:
+#     admin:
+#       url: http://localhost:8082
+
+# management:
+#   contextPath: '/omar-admin-server/mgmt'
+#   security:
+#     enabled: false
