@@ -11,7 +11,8 @@ class ArchiveService {
 
     @HystrixCommand(commandProperties = [
         @HystrixProperty (name = "fallback.enabled", value = "false"),
-        @HystrixProperty (name = "execution.timeout.enabled", value = "false")
+        @HystrixProperty (name = "execution.timeout.enabled", value = "true"),
+        @HystrixProperty (name = "execution.isolation.thread.interruptOnTimeout", value = "false")
     ])
     def download(def response, FileDownloadCommand cmd)
     {
