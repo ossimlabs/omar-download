@@ -10,7 +10,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty
 class ArchiveService {
 
     @HystrixCommand(commandProperties = [
-        @HystrixProperty (name = "fallback.enabled", value = "false")
+        @HystrixProperty (name = "fallback.enabled", value = "false"),
+        @HystrixProperty (name = "execution.timeout.enabled", value = "false")
     ])
     def download(def response, FileDownloadCommand cmd)
     {
