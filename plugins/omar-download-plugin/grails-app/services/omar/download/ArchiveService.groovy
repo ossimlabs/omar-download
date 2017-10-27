@@ -3,15 +3,22 @@ package omar.download
 import grails.transaction.Transactional
 import omar.core.HttpStatus
 import grails.converters.JSON
+import org.springframework.beans.factory.annotation.Value
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty
 
 @Transactional
 class ArchiveService {
 
+    @Value('${hystrix.fallback.enabled:false}')
+    String fallBackEnabled
+
+    @Value('${hystrix.execution.timeout.enabled:false}')
+    String executionTimeoutEnabled
+
     @HystrixCommand(commandProperties = [
-        @HystrixProperty (name = "fallback.enabled", value = "false"),
-        @HystrixProperty (name = "execution.timeout.enabled", value = "false")
+        @HystrixProperty (name = "fallback.enabled", value = "${fallBackEnabled}"),
+        @HystrixProperty (name = "execution.timeout.enabled", value = "${executionTimeoutEnabled}")
     ])
     def download(def response, FileDownloadCommand cmd)
     {
