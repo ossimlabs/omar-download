@@ -3,15 +3,12 @@ package omar.download
 import grails.transaction.Transactional
 import omar.core.HttpStatus
 import grails.converters.JSON
-
-import java.util.ArrayList
-
-//import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
 
 @Transactional
 class ArchiveService {
 
-    //@HystrixCommand
+    @HystrixCommand
     def download(def response, FileDownloadCommand cmd)
     {
         HashMap result = [
