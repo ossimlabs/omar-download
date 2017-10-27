@@ -17,15 +17,15 @@ spring:
 #   security:
 #     enabled: false
 
-# ---
-# spring:
-#   profiles: production
-#   cloud:
-#     config:
-#       uri: http://omar-config-server:8888/omar-config-server
-#   boot:
-#     admin:
-#       url: http://omar-admin-server:8080/omar-admin-server/
+---
+spring:
+  profiles: production
+  cloud:
+    config:
+      uri: http://omar-config-server:8888/omar-config-server
+  boot:
+    admin:
+      url: http://omar-admin-server:8080/omar-admin-server/
 
 ---
 # eureka:
