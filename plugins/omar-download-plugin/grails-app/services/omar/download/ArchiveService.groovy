@@ -3,16 +3,10 @@ package omar.download
 import grails.transaction.Transactional
 import omar.core.HttpStatus
 import grails.converters.JSON
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty
 
 @Transactional
 class ArchiveService {
 
-    @HystrixCommand(commandProperties = [
-        @HystrixProperty (name = "fallback.enabled", value = "false"),
-        @HystrixProperty (name = "execution.timeout.enabled", value = "false")
-    ])
     def download(def response, FileDownloadCommand cmd)
     {
         HashMap result = [
