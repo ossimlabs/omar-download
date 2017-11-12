@@ -1,15 +1,10 @@
 package omar.download
 
-import grails.transaction.Transactional
 import groovy.util.logging.Slf4j
-import omar.core.HttpStatus
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import java.util.UUID
-import java.util.ArrayList
-import omar.core.HttpStatus
-
+import groovy.json.JsonBuilder
 
 /**
  * Created by nroberts on 7/7/16.
@@ -43,21 +38,26 @@ class ZipFiles {
         varFileList.each { ftzPath ->
             try
             {
-                if(ftzPath!="")
+                if (ftzPath!="")
                 {
                     fileToZip = new File(ftzPath)
 
-                    if (varRootFilePath) {
+                    if (varRootFilePath)
+                    {
                         filePathName = new File(varRootFilePath)
-                    } else {
+                    }
+                    else
+                    {
                         filePathName = new File(fileToZip?.parent)
                     }
 
-                    if (fileToZip.isDirectory()) {
+                    if (fileToZip.isDirectory())
+                    {
 
                         fileToZip.eachFileRecurse { dir ->
 
-                            if (!dir.isDirectory()) {
+                            if (!dir.isDirectory())
+                            {
                                 relPath = filePathName.toPath().relativize(dir.toPath()).toFile()
                                 dFileFullPath = "${dir.toString()}"
                                 zipEntryPath = "${zipFileID}/${relPath.toString()}"
@@ -65,7 +65,9 @@ class ZipFiles {
                                 fileInfo.add(new HashMap([fileFullPath: "${dFileFullPath}", zipEntryPath: "${zipEntryPath}"]))
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         dFileFullPath = "${fileToZip.toString()}"
                         relPath = filePathName.toPath().relativize(fileToZip.toPath()).toFile()
                         zipEntryPath = "${zipFileID}/${relPath.toString()}"
@@ -138,27 +140,36 @@ class ZipFiles {
      ****************************************************************/
     void zip(ArrayList varFileInfo, OutputStream varOutputStream)
     {
+        def requestType = "GET"
+        def requestMethod = "Download"
+
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
         byte[] readBuffer = new byte[BUFFER_SIZE]
         int bytesIn = 0
-        try{
-            varFileInfo.each{ zipFilePath->
+        try
+        {
+            varFileInfo.each { zipFilePath ->
+                Date startTime = new Date()
 
                 FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] )
-                println "created fis for ${zipFilePath["fileFullPath"]}"
                 ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" )
 
                 zos.putNextEntry( anEntry )
-                println "added next entry to zos"
                 while ( ( bytesIn = fis.read( readBuffer ) ) > 0 )
                 {
                     zos.write( readBuffer, 0, bytesIn )
                 }
                 zos.closeEntry()
-                println "closed zos entry"
                 fis.close()
-                println "closed fis"
+
+                Date endTime = new Date()
+                def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
+                def requestInfoLog = new JsonBuilder(timestamp: startTime.format("YYYY-MM-DD HH:mm:ss.Ms"),
+                        requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("YYYY-MM-DD HH:mm:ss.Ms"),
+                        responseTime: responseTime, filename: zipFilePath["fileFullPath"])
+
+                log.info requestInfoLog.toString()
             }
         }
         catch (e)
