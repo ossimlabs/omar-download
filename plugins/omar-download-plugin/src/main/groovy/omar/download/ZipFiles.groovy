@@ -165,8 +165,8 @@ class ZipFiles {
 
                 Date endTime = new Date()
                 def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
-                def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-mm-dd hh:mm:ss.ms"),
-                        requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-mm-dd hh:mm:ss.ms"),
+                def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                        requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
                         responseTime: responseTime, filename: zipFilePath["fileFullPath"])
 
                 log.info requestInfoLog.toString()
