@@ -98,7 +98,7 @@ Example:
     ])
 
     def download() {
-        println params
+        //println params
         def jsonData = request.JSON?request.JSON as HashMap:null
         def fileInfoParams = params.fileInfo?params.fileInfo:null
         def requestParams = params - params.subMap(['fileInfo','controller', 'format', 'action'])
