@@ -34,12 +34,10 @@ class ArchiveService {
                 result << record
             }
         }
-        println result
         result
     }
     def download(def response, FileDownloadCommand cmd)
     {
-        println cmd
         Integer maxFiles = grailsApplication.config?.omar?.download?.maxFiles?:10
         HashMap result = [
                 status:HttpStatus.OK,
@@ -82,7 +80,7 @@ class ArchiveService {
                             }
                             else
                             {
-                                def listOfFilesAsMaps = cmd.fileGroups
+                                 def listOfFilesAsMaps = cmd.fileGroups
 
                                 ZipFiles zipFiles = new ZipFiles()
                                 if(listOfFilesAsMaps.size() <= maxFiles)
