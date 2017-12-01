@@ -65,8 +65,13 @@ Example of a accepted single and multiple file groups
                     "files":["","",...]
                 }
             ]
+
+            OR
+
+        "ids":[ recordId1, recordId2,...recordIdn]
+
 ```
-Example:
+Example 1:
 ```
 {
     "type":"Download",
@@ -84,6 +89,19 @@ Example:
     ]
 }
 ```
+Example 2:
+```
+{
+    "type":"Download",
+    "zipFileName": "",
+    "archiveOptions":
+    {
+        "type": "zip"
+    },
+    "ids":[1,2,3,4]
+}
+```
+
 """)
 
     @ApiImplicitParams([

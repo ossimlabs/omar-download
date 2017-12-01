@@ -12,13 +12,15 @@ class FileDownloadCommand implements Validateable
     String type = "Download"
     def archiveOptions
     def fileGroups
+    def ids
     def zipFileName
 
     static constraints = {
 
         type(nullable:true)
         archiveOptions(nullable:true)
-        fileGroups()
+        fileGroups(nullable:true)
+        ids(nullable:true)
         zipFileName(nullable:true)
     }
 
