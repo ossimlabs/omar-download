@@ -3,19 +3,51 @@ package omar.download
 import grails.transaction.Transactional
 import omar.core.HttpStatus
 import grails.converters.JSON
+import java.net.URL
+import groovy.json.JsonSlurper
 
 @Transactional
 class ArchiveService {
 
+    def grailsApplication
+    def loadFileGroupsFromIds(def ids)
+    {
+        String getRasterFilesUrl = grailsApplication.config?.omar?.download?.getRasterFilesUrl;
+        Boolean addQuestion = !getRasterFilesUrl?.endsWith("?")
+        String question = ""
+        def result = []
+        if(addQuestion)
+        {
+            getRasterFilesUrl="${getRasterFilesUrl}?"
+        }
+
+        def slurper = new JsonSlurper()
+        ids?.each{
+            URL url = new URL("${getRasterFilesUrl}id=${it}".toString())
+            def obj = slurper.parseText(url.text)
+            if(obj)
+            {
+                HashMap record = [files:[]]
+                obj.results.each{
+                    record.files << it
+                }
+                result << record
+            }
+        }
+        println result
+        result
+    }
     def download(def response, FileDownloadCommand cmd)
     {
+        println cmd
+        Integer maxFiles = grailsApplication.config?.omar?.download?.maxFiles?:10
         HashMap result = [
                 status:HttpStatus.OK,
                 message:"Downloading Files"
         ]
 
         String fileName = cmd.zipFileName
-
+        def fileGroups = cmd.fileGroups
         if ((!fileName) || (fileName == ""))
         {
             fileName = "omar_images.zip"
@@ -23,14 +55,20 @@ class ArchiveService {
 
         if (cmd.validate())
         {
-
             try
             {
+                if(!cmd.fileGroups)
+                {
+                    if(cmd.ids)
+                    {
+                        cmd.fileGroups = loadFileGroupsFromIds(cmd.ids)
+                    }
+                }
                 if ((cmd.type?.toLowerCase() == "download") || (cmd.type == null))
                 {
                     if(cmd.isZip())
                     {
-                        if(cmd.fileGroups.size()>=1)
+                        if(cmd.fileGroups?.size()>=1)
                         {
                             response.setContentType("application/octet-stream")
                             response.setHeader("Content-Disposition", "attachment;filename=${fileName}");
@@ -44,9 +82,18 @@ class ArchiveService {
                             }
                             else
                             {
-                                ArrayList listOfFilesAsMaps = cmd.fileGroups
+                                def listOfFilesAsMaps = cmd.fileGroups
+
                                 ZipFiles zipFiles = new ZipFiles()
-                                zipFiles.zipMulti(listOfFilesAsMaps, response.outputStream)
+                                if(listOfFilesAsMaps.size() <= maxFiles)
+                                {
+                                    zipFiles.zipMulti(listOfFilesAsMaps, response.outputStream)
+                                }
+                                else
+                                {
+                                    result.status =  omar.core.HttpStatus.NOT_ACCEPTABLE
+                                    result.message = "Too many images passed in.  Max number is ${maxFiles}"
+                                }
                             }
                         }
                         else

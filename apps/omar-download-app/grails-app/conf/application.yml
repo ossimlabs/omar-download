@@ -161,3 +161,10 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+
+---
+omar:
+  download:
+    maxFiles: 10
+    getRasterFilesUrl: http://localhost/omar-stager/dataManager/getRasterFiles
+
