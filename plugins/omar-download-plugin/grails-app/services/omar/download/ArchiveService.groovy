@@ -21,18 +21,33 @@ class ArchiveService {
             getRasterFilesUrl="${getRasterFilesUrl}?"
         }
 
-        def slurper = new JsonSlurper()
-        ids?.each{
-            URL url = new URL("${getRasterFilesUrl}id=${it}".toString())
-            def obj = slurper.parseText(url.text)
-            if(obj)
-            {
-                HashMap record = [files:[]]
-                obj.results.each{
-                    record.files << it
+        if(getRasterFilesUrl)
+        {
+            try{
+                def slurper = new JsonSlurper()
+                ids?.each{
+                    URL url = new URL("${getRasterFilesUrl}id=${it}".toString())
+                    def obj = slurper.parseText(url.text)
+                    if(obj)
+                    {
+                        HashMap record = [files:[]]
+                        obj.results.each{
+                            record.files << it
+                        }
+                        result << record
+                    }
                 }
-                result << record
+
             }
+            catch(e)
+            {
+                log.error(e)
+            }
+        }
+        else
+        {
+            log.error("getRasterFilesUrl is not specified for omar-download!")
+            result = []
         }
         result
     }
@@ -132,6 +147,7 @@ class ArchiveService {
             String jsonData = "${result as JSON}"
 
             response.outputStream.write(jsonData.bytes)
+            log.error(jsonData)
         }
 
         response.outputStream.close()
