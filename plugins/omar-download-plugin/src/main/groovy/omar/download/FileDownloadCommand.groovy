@@ -19,8 +19,18 @@ class FileDownloadCommand implements Validateable
 
         type(nullable:true)
         archiveOptions(nullable:true)
-        fileGroups(nullable:true)
-        ids(nullable:true)
+        fileGroups(nullable:true, validator: { val, obj ->
+            if((val == null) && (obj.ids == null))
+            {
+                return "Either fileGroups or ids must be specified,  Both can't be null. Please see the api docs for use."
+            }
+        })
+        ids(nullable:true), validator: { val, obj ->
+            if((val == null) && (obj.fileGroups == null))
+            {
+                return "Either fileGroups or ids must be specified,  Both can't be null. Please see the api docs for use."
+            }
+        })
         zipFileName(nullable:true)
     }
 
