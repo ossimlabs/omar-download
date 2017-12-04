@@ -25,7 +25,7 @@ class FileDownloadCommand implements Validateable
                 return "Either fileGroups or ids must be specified,  Both can't be null. Please see the api docs for use."
             }
         })
-        ids(nullable:true), validator: { val, obj ->
+        ids(nullable:true, validator: { val, obj ->
             if((val == null) && (obj.fileGroups == null))
             {
                 return "Either fileGroups or ids must be specified,  Both can't be null. Please see the api docs for use."
