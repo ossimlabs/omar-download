@@ -143,6 +143,7 @@ class ZipFiles {
         def requestType = "GET"
         def requestMethod = "Download"
         def status = 200
+        Date startTime = new Date()
 
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
@@ -152,7 +153,6 @@ class ZipFiles {
         {
             HashMap noDuplicatEntryHash = [:]
             varFileInfo.each { zipFilePath ->
-                Date startTime = new Date()
                 if(noDuplicatEntryHash."${zipFilePath.zipEntryPath}" == null)
                 {
                     noDuplicatEntryHash."${zipFilePath.zipEntryPath}" = zipFilePath.zipFullPath
