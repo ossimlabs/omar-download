@@ -82,7 +82,7 @@ class ZipFiles {
             }
             catch (e)
             {
-                log.error(e.message.toString())
+                log.error(e.message)
             }
         }
 
@@ -172,7 +172,7 @@ class ZipFiles {
         catch (e)
         {
             status = 400
-            log.error(e.toString())
+            log.error(e.message)
         }
         finally
         {
