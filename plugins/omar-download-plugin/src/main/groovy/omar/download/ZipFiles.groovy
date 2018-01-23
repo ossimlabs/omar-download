@@ -142,6 +142,7 @@ class ZipFiles {
     {
         def requestType = "GET"
         def requestMethod = "Download"
+        def status = 200
 
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
@@ -165,25 +166,25 @@ class ZipFiles {
                     }
                     zos.closeEntry()
                     fis.close()
-
-                    Date endTime = new Date()
-                    def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
-                    def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
-                            requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
-                            responseTime: responseTime, filename: zipFilePath["fileFullPath"])
-
-                    log.info requestInfoLog.toString()
-
                 }
             }
         }
         catch (e)
         {
+            status = 400
             log.error(e.toString())
         }
         finally
         {
             zos.close()
+
+            Date endTime = new Date()
+            def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
+            def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                    requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                    responseTime: responseTime, filename: zipFilePath["fileFullPath"], status: status)
+
+            log.info requestInfoLog.toString()
         }
     }
 }
