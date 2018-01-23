@@ -143,7 +143,9 @@ class ZipFiles {
         def requestType = "GET"
         def requestMethod = "Download"
         def status = 200
+        def lastFileName
         Date startTime = new Date()
+        Date endTime
 
         ZipOutputStream zos = new ZipOutputStream(varOutputStream)
 
@@ -153,10 +155,12 @@ class ZipFiles {
         {
             HashMap noDuplicatEntryHash = [:]
             varFileInfo.each { zipFilePath ->
+                startTime = new Date()
                 if(noDuplicatEntryHash."${zipFilePath.zipEntryPath}" == null)
                 {
                     noDuplicatEntryHash."${zipFilePath.zipEntryPath}" = zipFilePath.zipFullPath
                     FileInputStream fis = new FileInputStream( zipFilePath["fileFullPath"] )
+                    lastFileName = zipFilePath["fileFullPath"]
                     ZipEntry anEntry = new ZipEntry( "${zipFilePath["zipEntryPath"]}" )
 
                     zos.putNextEntry( anEntry )
@@ -167,24 +171,31 @@ class ZipFiles {
                     zos.closeEntry()
                     fis.close()
                 }
+                endTime = new Date()
+                def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
+                def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                    requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                    responseTime: responseTime, filename: lastFileName, status: status)
+
+                log.info requestInfoLog.toString()
             }
         }
         catch (e)
         {
             status = 400
+            endTime = new Date()
+            def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
+            def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                responseTime: responseTime, filename: lastFileName, status: status)
+
+            log.info requestInfoLog.toString()
             log.error(e.message)
         }
         finally
         {
             zos.close()
-
-            Date endTime = new Date()
-            def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
-            def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
-                    requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
-                    responseTime: responseTime, filename: zipFilePath["fileFullPath"], status: status)
-
-            log.info requestInfoLog.toString()
+            
         }
     }
 }
