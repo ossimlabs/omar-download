@@ -41,7 +41,7 @@ class ArchiveService {
             }
             catch(e)
             {
-                log.error(e)
+                log.error(e.toString())
             }
         }
         else
