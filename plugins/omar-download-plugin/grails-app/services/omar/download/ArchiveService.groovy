@@ -32,7 +32,7 @@ class ArchiveService {
                     {
                         HashMap record = [files:[]]
                         obj.results.each{
-                            record.files << it
+                            record.files << it.name
                         }
                         result << record
                     }
