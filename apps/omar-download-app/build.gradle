@@ -13,6 +13,7 @@ buildscript {
           "COPY goofys /usr/bin/goofys",
           "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME",
           "USER root",
+          "ADD ./yum.repos.d/* /etc/yum.repos.d/",
           """RUN yum -y install nss_wrapper && \\
     yum -y install fuse && \\
     yum -y install fuse-libs && \\
