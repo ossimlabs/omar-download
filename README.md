@@ -4,7 +4,7 @@
 
 The OMAR Download service handles user download requests for imagery, bundling an image's raw file with all auxillary files into a zip file.
 
-[![Build Status](https://jenkins.radiantbluecloud.com/buildStatus/icon?job=omar-download-dev)]()
+[![Build Status](https://jenkins.ossim.io/buildStatus/icon?job=omar-download-dev)]()
 
 #### The Download Web Service takes multiple images or image groups specified in a JSON and return a zip archive.
 
