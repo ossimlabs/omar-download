@@ -24,6 +24,7 @@ apply plugin: "asset-pipeline"
 apply plugin: "java"
 apply plugin: "maven-publish"
 
+sourceSets.main.output.classesDir = 'build/classes/groovy/main'
 io.ossim.gradleDefaults.Variables.setAdditionalVariables(project)
 io.ossim.gradleDefaults.Variables.setVersionVariables(project)
 version "${buildVersion}-${buildVersionTag}"
@@ -56,6 +57,8 @@ dependencies {
     compile "io.ossim.omar.plugins:omar-core-plugin:${latestGradleIdentifier}"
   }
 
+  compile "io.swagger:swagger-annotations:1.5.15"
+
   compile "org.springframework.cloud:spring-cloud-starter-hystrix"
   compile "org.springframework.boot:spring-boot-starter-web"
   compile "org.springframework.boot:spring-boot-starter-logging"
@@ -81,9 +84,9 @@ dependencies {
   provided "org.grails:grails-plugin-domain-class"
   runtime "com.bertramlabs.plugins:asset-pipeline-grails:${assetPipelineGrailsV}"
   testCompile "org.grails:grails-gorm-testing-support"
-  testCompile "org.grails:grails-plugin-testing"
+  testCompile "org.grails:grails-plugin-testing:3.2.7"
   testCompile "org.grails.plugins:geb"
-  testCompile "org.grails:grails-web-testing-support:3.2.7"
+  testCompile "org.grails:grails-web-testing-support"
   testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:${seleniumHtmlUnitDriverV}"
   testRuntime "net.sourceforge.htmlunit:htmlunit:${htmlUnitV}"
 
