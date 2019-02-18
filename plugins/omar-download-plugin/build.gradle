@@ -59,6 +59,7 @@ dependencies {
 
   compile "io.swagger:swagger-annotations:1.5.15"
   compile "io.swagger:swagger-models:1.5.15"
+  compile "org.grails.plugins:actuator-ui:1.1"
 
   compile "org.springframework.cloud:spring-cloud-starter-hystrix"
   compile "org.springframework.boot:spring-boot-starter-web"
