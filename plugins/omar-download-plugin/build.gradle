@@ -1,25 +1,17 @@
 buildscript {
-  ext {
-    grailsVersion = project.grailsVersion
-    baseImage = ""
-  }
-  if(System.env.OMAR_COMMON_PROPERTIES)
-  {
-    apply from: System.env.OMAR_COMMON_PROPERTIES
-  }
   repositories {
     mavenLocal()
-    maven { url "${ossimMavenProxy}" }
-    maven { url "https://repo.grails.org/grails/core" }
+    maven { url ossimMavenProxy }
   }
   dependencies {
     classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-    classpath "com.bertramlabs.plugins:asset-pipeline-gradle:${assetPipelineGradleV}"
+    classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.14.10"
+    classpath 'io.ossim:gradleDefaults:1.6-SNAPSHOT'
   }
 }
 
 plugins {
-  id "com.github.ben-manes.versions" version "0.17.0"
+    id "com.github.ben-manes.versions" version "0.17.0"
 }
 
 apply plugin: "eclipse"
@@ -32,51 +24,47 @@ apply plugin: "asset-pipeline"
 apply plugin: "java"
 apply plugin: "maven-publish"
 
-group "io.ossim.omar.plugins"
-
-ext {
-  grailsVersion = project.grailsVersion
-  gradleWrapperVersion = project.gradleWrapperVersion
-}
+sourceSets.main.output.classesDir = 'build/classes/groovy/main'
+io.ossim.gradleDefaults.Variables.setAdditionalVariables(project)
+io.ossim.gradleDefaults.Variables.setVersionVariables(project)
+version "${buildVersion}-${buildVersionTag}"
+jarDestination = "${projectDir}/build/libs/${project.name}-${version}.jar"
+io.ossim.gradleDefaults.Publications.addPublication(project, groupName, name, "${buildVersion}-${buildVersionTag}")
+io.ossim.gradleDefaults.Publications.addRepository(project, mavenPublishUrl, mavenRepoUsername, mavenRepoPassword)
 
 repositories {
   mavenLocal()
-  maven { url "${ossimMavenProxy}" }
-  // this is for JAI.  Must be before the mavenCentral and stuff.
-  mavenCentral()
-  maven { url "https://dl.bintray.com/ajay-kumar/plugins" }
-  maven { url "https://repo.grails.org/grails/core" }
-  maven { url "http://download.osgeo.org/webdav/geotools" }
+  maven { url ossimMavenProxy }
 }
 
 dependencyManagement {
   imports {
-    // mavenBom "org.grails:grails-bom:$grailsVersion"
     mavenBom "org.springframework.cloud:spring-cloud-starter-parent:${springCloudDependencyV}"
   }
   applyMavenExclusions false
 }
 
-grails {
-  plugins {
-    compile project(':omar-core-plugin')
-    // compile project(':omar-openlayers-plugin')
+if ( System.getenv('O2_INLINE_BUILD') ) {
+  grails {
+    plugins {
+      compile project(":omar-core-plugin")
+    }
   }
 }
 
 dependencies {
-/*
-  if ( System.getenv('O2_DEV_HOME')) {
-    compile project(':omar-core-plugin')
-    compile project(':omar-openlayers-plugin')
-  } else {
-    compile(group: "io.ossim.omar.plugins", name: "omar-openlayers-plugin", version: "1.0.0-${buildVersionTag}", changing: jarArtifactsChanging)
-    compile(group: "io.ossim.omar.plugins", name: "omar-core-plugin", version: "1.1.0-${buildVersionTag}", changing: jarArtifactsChanging)
+  if ( ! System.getenv('O2_INLINE_BUILD') ) {
+    compile "io.ossim.omar.plugins:omar-core-plugin:${latestGradleIdentifier}"
   }
-*/
+
+  compile "io.swagger:swagger-annotations:1.5.15"
+  compile "io.swagger:swagger-models:1.5.15"
+  compile "org.grails.plugins:actuator-ui:1.1"
+  compile "org.webjars:swagger-ui:3.20.5"
+  compile 'org.grails.plugins:swagger:1.0.0'
+
   compile "org.springframework.cloud:spring-cloud-starter-hystrix"
   compile "org.springframework.boot:spring-boot-starter-web"
-
   compile "org.springframework.boot:spring-boot-starter-logging"
   compile "org.springframework.boot:spring-boot-autoconfigure"
   compile "org.grails:grails-core"
@@ -108,29 +96,8 @@ dependencies {
 
 }
 
+bootRepackage.enabled = false
+
 assets {
   packagePlugin = true
-}
-
-grailsPublish {
-  // TODO: Provide values here
-  user = "user"
-  key = "key"
-  githubSlug = "foo/bar"
-  license {
-    name = "Apache-2.0"
-  }
-  title = "My Plugin"
-  desc = "Full plugin description"
-  developers = [johndoe:"John Doe"]
-  portalUser = ""
-  portalPassword = ""
-}
-
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
-    }
-  }
 }

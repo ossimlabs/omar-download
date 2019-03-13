@@ -32,7 +32,7 @@ class ArchiveService {
                     {
                         HashMap record = [files:[]]
                         obj.results.each{
-                            record.files << it
+                            record.files << it.name
                         }
                         result << record
                     }
@@ -41,7 +41,7 @@ class ArchiveService {
             }
             catch(e)
             {
-                log.error(e)
+                log.error(e.toString())
             }
         }
         else

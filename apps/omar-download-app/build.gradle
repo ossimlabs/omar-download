@@ -1,52 +1,14 @@
 buildscript {
-    ext {
-        grailsVersion = project.grailsVersion
-        baseImage = "omar-base"
-    dockerFile ="docker/Dockerfile"
-     dockerStatementsOverride = {
-       [
-          "FROM ${project.dockerNamespaceUrl}${project.ext.baseImage}:${project.dockerAppTag}",
-          """ENV SPRING_CLOUD_CONFIG_ENABLED=true \\
-    SPRING_CLOUD_DISCOVERY_ENABLED=true \\
-    HOME=/home/omar""",
-          "COPY run.sh \$HOME/run.sh",
-          "COPY ${project.name}-${buildVersion}-${buildVersionTag}.jar \$HOME",
-          "USER root",
-          """RUN yum -y install nss_wrapper && \\
-    yum -y install fuse && \\
-    yum -y install fuse-libs && \\
-    yum -y install libevent && \\
-    yum -y install curl && \\
-    yum clean all && \\
-    curl -k -s "https://s3.amazonaws.com/ossimlabs/dependencies/riofs/riofs" -o /usr/bin/riofs && \\
-    curl -k -s "https://s3.amazonaws.com/ossimlabs/dependencies/goofys/goofys" -o /usr/bin/goofys && \\
-    chmod +x /usr/bin/goofys && \\
-    mkdir -p /s3 && chown -R 1001:0 /s3 && chmod 777 /s3 && \\
-    chmod ugo+x /usr/bin/riofs && \\
-    echo "user_allow_other" > /etc/fuse.conf && \\
-    chown -R 1001:0 \$HOME && \\
-    chmod +x \$HOME/run.sh && \\
-    find \$HOME -type d -exec chmod g+x {} +""",
-          "USER 1001",
-          "WORKDIR \$HOME",
-          "EXPOSE 8080",
-          "CMD \$HOME/run.sh"
-       ]
-     }
-    }
-    if(System.env.OMAR_COMMON_PROPERTIES)
-    {
-        apply from: System.env.OMAR_COMMON_PROPERTIES
-    }
     repositories {
         mavenLocal()
-        maven { url "${ossimMavenProxy}" }
-        maven { url "https://repo.grails.org/grails/core" }
+        maven { url ossimMavenProxy }
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:${assetPipelineGradleV}"
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.14.10"
+        classpath 'com.bmuschko:gradle-docker-plugin:3.0.12'
+        classpath 'io.ossim:gradleDefaults:1.6-SNAPSHOT'
     }
 }
 
@@ -55,8 +17,6 @@ plugins {
     id "org.sonarqube" version "2.6.2"
 }
 
-group "io.ossim.omar.apps"
-
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"org.grails.grails-web"
@@ -64,12 +24,15 @@ apply plugin:"org.grails.grails-gsp"
 apply plugin:"asset-pipeline"
 
 apply plugin: "java"
-apply plugin: "maven-publish"
 
-ext {
-    grailsVersion = project.grailsVersion
-    gradleWrapperVersion = project.gradleWrapperVersion
-}
+sourceSets.main.output.classesDir = 'build/classes/groovy/main'
+io.ossim.gradleDefaults.Variables.setAdditionalVariables(project)
+io.ossim.gradleDefaults.Variables.setVersionVariables(project)
+dockerBuildDir="${rootProject.projectDir}/docker"
+version "${buildVersion}-${buildVersionTag}"
+jarDestination = "${projectDir}/build/libs/${project.name}-${version}.jar"
+io.ossim.gradleDefaults.Docker.addDockerTasks(project, dockerRegistryUrl, dockerRegistryUsername, dockerRegistryPassword, name, dockerImageTag, dockerBuildDir, jarDestination, ["BASE_IMAGE": "${dockerRegistryUrl}/${dockerBaseImage}"])
+io.ossim.gradleDefaults.Openshift.addOpenshiftTasks(project, openshiftUrl, openshiftUsername, openshiftPassword, openshiftProjectName, openshiftServiceName,  dockerRegistryUrl, name, dockerImageTag)
 
 assets {
   minifyJs = true
@@ -81,13 +44,11 @@ assets {
 
 repositories {
   mavenLocal()
-  maven { url "${ossimMavenProxy}" }
-  maven { url "https://repo.grails.org/grails/core" }
+  maven { url ossimMavenProxy }
 }
 
 dependencyManagement {
     imports {
-        // mavenBom "org.grails:grails-bom:$grailsVersion"
         mavenBom "org.springframework.cloud:spring-cloud-starter-parent:${springCloudDependencyV}"
     }
     applyMavenExclusions false
@@ -140,17 +101,11 @@ dependencies {
     testCompile "org.grails:grails-web-testing-support"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:${seleniumHtmlUnitDriverV}"
     testRuntime "net.sourceforge.htmlunit:htmlunit:${htmlUnitV}"
-}
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
-    }
-  }
 }
 
 bootRun {
     jvmArgs = [
     ]
 }
+// Testing
