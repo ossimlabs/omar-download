@@ -90,14 +90,14 @@ class ArchiveService {
                             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
                             if(cmd.fileGroups.size()==1)
                             {
-                                HashMap listOfFilesAsMaps = getAllFiles(cmd.fileGroups)
+                                Map listOfFilesAsMaps = getAllFiles(cmd.fileGroups)
                                 
                                 ZipFiles zipFiles = new ZipFiles()
                                 zipFiles.zipSingle(listOfFilesAsMaps, response.outputStream)
                             }
                             else
                             {
-                                 def listOfFilesAsMaps = []
+                                List<Map> listOfFilesAsMaps = []
 
                                 cmd.fileGroups.each {
                                     listOfFilesAsMaps.add(getAllFiles(it))
@@ -161,9 +161,9 @@ class ArchiveService {
         result
     }
 
-    HashMap getAllFiles(HashMap fileGroup)
+    Map getAllFiles(Map fileGroup)
     {
-        def files = []
+        List<File> files = []
         String imageFilePath = fileGroup["files"][0]
         String baseFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1,imageFilePath.lastIndexOf("."))
         File parentDir
@@ -171,15 +171,18 @@ class ArchiveService {
         if (fileGroup["rootDirectory"]) parentDir = new File(fileGroup["rootDirectory"])
         else parentDir = new File(imageFilePath.substring(0,imageFilePath.lastIndexOf("/")))
 
-        HashMap allFiles = [files:[]]
+        Map allFiles = [files:[]]
 
         parentDir.traverse(type: FileType.FILES, maxDepth: 0) { files.add(it) }
 
         files.each {
             String filename = it.getName()
-            if (filename.substring(0,filename.lastIndexOf(".")).equalsIgnoreCase(baseFileName)) allFiles.files.add(it.getPath())
+            if (filename.substring(0,filename.lastIndexOf(".")).equalsIgnoreCase(baseFileName))
+            {
+                allFiles.files.add(it.getPath())
+            }
         }
 
-        allFiles
+        return allFiles
     }
 }
