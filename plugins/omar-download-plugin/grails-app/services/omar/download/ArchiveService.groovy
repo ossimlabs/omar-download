@@ -5,6 +5,7 @@ import omar.core.HttpStatus
 import grails.converters.JSON
 import java.net.URL
 import groovy.json.JsonSlurper
+import groovy.io.FileType
 
 @Transactional
 class ArchiveService {
@@ -89,13 +90,18 @@ class ArchiveService {
                             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
                             if(cmd.fileGroups.size()==1)
                             {
-                                HashMap listOfFilesAsMaps = cmd.fileGroups
+                                HashMap listOfFilesAsMaps = getAllFiles(cmd.fileGroups)
+                                
                                 ZipFiles zipFiles = new ZipFiles()
                                 zipFiles.zipSingle(listOfFilesAsMaps, response.outputStream)
                             }
                             else
                             {
-                                 def listOfFilesAsMaps = cmd.fileGroups
+                                 def listOfFilesAsMaps = []
+
+                                cmd.fileGroups.each {
+                                    listOfFilesAsMaps.add(getAllFiles(it))
+                                }
 
                                 ZipFiles zipFiles = new ZipFiles()
                                 if(listOfFilesAsMaps.size() <= maxFiles)
@@ -153,5 +159,27 @@ class ArchiveService {
         response.outputStream.close()
 
         result
+    }
+
+    HashMap getAllFiles(HashMap fileGroup)
+    {
+        def files = []
+        String imageFilePath = fileGroup["files"][0]
+        String baseFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1,imageFilePath.lastIndexOf("."))
+        File parentDir
+
+        if (fileGroup["rootDirectory"]) parentDir = new File(fileGroup["rootDirectory"])
+        else parentDir = new File(imageFilePath.substring(0,imageFilePath.lastIndexOf("/")))
+
+        HashMap allFiles = [files:[]]
+
+        parentDir.traverse(type: FileType.FILES, maxDepth: 0) { files.add(it) }
+
+        files.each {
+            String filename = it.getName()
+            if (filename.substring(0,filename.lastIndexOf(".")).equalsIgnoreCase(baseFileName)) allFiles.files.add(it.getPath())
+        }
+
+        allFiles
     }
 }
