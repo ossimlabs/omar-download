@@ -165,7 +165,6 @@ class ArchiveService {
     {
         List<File> files = []
         String imageFilePath = fileGroup["files"][0]
-        String baseFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1,imageFilePath.lastIndexOf("."))
         File parentDir
 
         if (fileGroup["rootDirectory"]) parentDir = new File(fileGroup["rootDirectory"])
@@ -176,11 +175,7 @@ class ArchiveService {
         parentDir.traverse(type: FileType.FILES, maxDepth: 0) { files.add(it) }
 
         files.each {
-            String filename = it.getName()
-            if (filename.substring(0,filename.lastIndexOf(".")).equalsIgnoreCase(baseFileName))
-            {
-                allFiles.files.add(it.getPath())
-            }
+            allFiles.files.add(it.getPath())
         }
 
         return allFiles
