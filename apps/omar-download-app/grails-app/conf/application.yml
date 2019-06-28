@@ -3,8 +3,8 @@ logging:
   config: classpath:logback.groovy
 
 # Set the context path for the application.
-#server:
-#  contextPath: /omar-download
+server:
+  contextPath: /omar-download
 
 # Define the http protocols that swagger can use
 swagger:
