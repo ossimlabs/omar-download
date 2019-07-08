@@ -2,6 +2,11 @@
 logging:
   config: classpath:logback.groovy
 
+omar:
+  download:
+    getRasterFilesUrl: http://omar-stager-app:8080/omar-stager/dataManager/getRasterFiles
+    maxFiles: 10
+
 # Set the context path for the application.
 server:
   contextPath: /omar-download
@@ -161,10 +166,3 @@ environments:
                 testOnReturn: false
                 jdbcInterceptors: ConnectionState
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
-
----
-omar:
-  download:
-    maxFiles: 10
-    getRasterFilesUrl: http://localhost/omar-stager/dataManager/getRasterFiles
-
