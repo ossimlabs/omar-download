@@ -33,7 +33,10 @@ class ArchiveService {
                     {
                         HashMap record = [files:[]]
                         obj.results.each{
-                            record.files << it.name
+                            if (it.type.toString().equals("main"))
+                            {
+                                record.files << it.name
+                            }
                         }
                         result << record
                     }
@@ -165,6 +168,7 @@ class ArchiveService {
     {
         List<File> files = []
         String imageFilePath = fileGroup["files"][0]
+        String imageFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1, imageFilePath.lastIndexOf("."))
         File parentDir
 
         if (fileGroup["rootDirectory"]) parentDir = new File(fileGroup["rootDirectory"])
@@ -172,7 +176,10 @@ class ArchiveService {
 
         Map allFiles = [files:[]]
 
-        parentDir.traverse(type: FileType.FILES, maxDepth: 0) { files.add(it) }
+        parentDir.traverse(type: FileType.FILES, maxDepth: 0) { 
+            String currentFile = it.getName()
+            if (currentFile.startsWith(imageFileName)) files.add(it)
+        }
 
         files.each {
             allFiles.files.add(it.getPath())
