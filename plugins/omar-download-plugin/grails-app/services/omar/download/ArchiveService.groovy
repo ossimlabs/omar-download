@@ -33,7 +33,7 @@ class ArchiveService {
                     {
                         HashMap record = [files:[]]
                         obj.results.each{
-                            if (it.type.equalsIgnoreCase("main")) record.files << it.name
+                            record.files << it.name
                         }
                         result << record
                     }
@@ -172,13 +172,7 @@ class ArchiveService {
 
         Map allFiles = [files:[]]
 
-        parentDir.traverse(type: FileType.FILES, maxDepth: 0) { 
-            if (it.getName().startsWith(imageFilePath))
-            {
-                files.add(it) 
-                log.info("Found matching file: ", it.getName())
-            }
-        }
+        parentDir.traverse(type: FileType.FILES, maxDepth: 0) { files.add(it) }
 
         files.each {
             allFiles.files.add(it.getPath())
