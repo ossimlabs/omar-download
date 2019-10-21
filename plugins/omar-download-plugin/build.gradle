@@ -1,15 +1,15 @@
 if ( System.getenv('O2_INLINE_BUILD') ) {
-  grails {
-    plugins {
-      compile project(":omar-core-plugin")
+    grails {
+        plugins {
+            if ( System.getenv('O2_INLINE_BUILD') ) {
+                compile project(":omar-core-plugin")
+            }
+        }
     }
-  }
 }
-
 dependencies {
-  if ( ! System.getenv('O2_INLINE_BUILD') ) {
-    compile "io.ossim.omar.plugins:omar-core-plugin:${latestGradleIdentifier}"
-  }
-
-  compile "org.springframework.cloud:spring-cloud-starter-hystrix"
+    //compile project( ":${ rootProject.name }-lib" )
+    if ( ! System.getenv('O2_INLINE_BUILD') ) {
+       compile "io.ossim.omar.plugins:omar-core-plugin:+"
+    }
 }

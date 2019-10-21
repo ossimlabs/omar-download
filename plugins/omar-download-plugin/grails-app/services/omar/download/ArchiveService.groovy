@@ -1,6 +1,6 @@
 package omar.download
 
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import omar.core.HttpStatus
 import grails.converters.JSON
 import java.net.URL
