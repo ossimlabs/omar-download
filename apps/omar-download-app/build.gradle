@@ -2,7 +2,7 @@ grails {
     plugins {
         compile project( ":${ rootProject.name }-plugin" )
         if ( System.getenv('O2_INLINE_BUILD') ) {
-        //    compile project(":omar-core-plugin")
+            compile project(":omar-download-plugin")
         }
     }
 }
