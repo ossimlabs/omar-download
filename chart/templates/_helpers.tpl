@@ -1,9 +1,9 @@
-{{- define "omar-download-service.imagePullSecret" }}
+{{- define "omar-download.imagePullSecret" }}
 {{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.global.imagePullSecret.registry (printf "%s:%s" .Values.global.imagePullSecret.username .Values.global.imagePullSecret.password | b64enc) | b64enc }}
 {{- end }}
 
 {{/* Template for env vars */}}
-{{- define "omar-download-service.envVars" -}}
+{{- define "omar-download.envVars" -}}
   {{- range $key, $value := .Values.envVars }}
   - name: {{ $key | quote }}
     value: {{ $value | quote }}
@@ -16,7 +16,7 @@
 
 {{/* Templates for the volumeMounts section */}}
 
-{{- define "omar-download-service.volumeMounts.configmaps" -}}
+{{- define "omar-download.volumeMounts.configmaps" -}}
 {{- range $configmap := .Values.configmaps}}
 - name: {{ $configmap.internalName | quote }}
   mountPath: {{ $configmap.mountPath | quote }}
@@ -26,7 +26,7 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "omar-download-service.volumeMounts.pvcs" -}}
+{{- define "omar-download.volumeMounts.pvcs" -}}
 {{- range $volumeName := .Values.volumeNames }}
 {{- $volumeDict := index $.Values.global.volumes $volumeName }}
 - name: {{ $volumeName }}
@@ -37,9 +37,9 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "omar-download-service.volumeMounts" -}}
-{{- include "omar-download-service.volumeMounts.configmaps" . -}}
-{{- include "omar-download-service.volumeMounts.pvcs" . -}}
+{{- define "omar-download.volumeMounts" -}}
+{{- include "omar-download.volumeMounts.configmaps" . -}}
+{{- include "omar-download.volumeMounts.pvcs" . -}}
 {{- end -}}
 
 
@@ -48,7 +48,7 @@
 
 {{/* Templates for the volumes section */}}
 
-{{- define "omar-download-service.volumes.configmaps" -}}
+{{- define "omar-download.volumes.configmaps" -}}
 {{- range $configmap := .Values.configmaps}}
 - name: {{ $configmap.internalName | quote }}
   configMap:
@@ -56,7 +56,7 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "omar-download-service.volumes.pvcs" -}}
+{{- define "omar-download.volumes.pvcs" -}}
 {{- range $volumeName := .Values.volumeNames }}
 {{- $volumeDict := index $.Values.global.volumes $volumeName }}
 - name: {{ $volumeName }}
@@ -65,7 +65,7 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "omar-download-service.volumes" -}}
-{{- include "omar-download-service.volumes.configmaps" . -}}
-{{- include "omar-download-service.volumes.pvcs" . -}}
+{{- define "omar-download.volumes" -}}
+{{- include "omar-download.volumes.configmaps" . -}}
+{{- include "omar-download.volumes.pvcs" . -}}
 {{- end -}}
