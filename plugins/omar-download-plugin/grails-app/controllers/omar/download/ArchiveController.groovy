@@ -10,7 +10,6 @@ import io.swagger.annotations.*
 import groovy.json.JsonSlurper
 import omar.core.BindUtil
 
-import javax.xml.ws.Response
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
