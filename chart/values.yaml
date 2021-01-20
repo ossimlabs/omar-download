@@ -79,6 +79,7 @@ readinessProbe:
   periodSeconds: 15
   successThreshold: 1
   timeoutSeconds: 380
+  path: omar-download
 
 terminationGracePeriodSeconds: 30
 
