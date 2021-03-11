@@ -6,6 +6,8 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import groovy.json.JsonBuilder
 
+import omar.core.DateUtil
+
 /**
  * Created by nroberts on 7/7/16.
  */
@@ -173,8 +175,8 @@ class ZipFiles {
                 }
                 endTime = new Date()
                 def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
-                def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
-                    requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+                def requestInfoLog = new JsonBuilder(timestamp: DateUtil.formatUTC(startTime),
+                    requestType: requestType, requestMethod: requestMethod, endTime: DateUtil.formatUTC(endTime),
                     responseTime: responseTime, filename: lastFileName, httpStatus: status)
 
                 log.info requestInfoLog.toString()
@@ -185,8 +187,8 @@ class ZipFiles {
             status = 400
             endTime = new Date()
             def responseTime = Math.abs(startTime.getTime() - endTime.getTime())
-            def requestInfoLog = new JsonBuilder(timestamp: startTime.format("yyyy-MM-dd hh:mm:ss.ms"),
-                requestType: requestType, requestMethod: requestMethod, endTime: endTime.format("yyyy-MM-dd hh:mm:ss.ms"),
+            def requestInfoLog = new JsonBuilder(timestamp: DateUtil.formatUTC(startTime),
+                requestType: requestType, requestMethod: requestMethod, endTime: DateUtil.formatUTC(endTime),
                 responseTime: responseTime, filename: lastFileName, status: status)
 
             log.info requestInfoLog.toString()
