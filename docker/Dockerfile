@@ -1,5 +1,3 @@
-#FROM nexus-docker-public-hosted.ossim.io/openjdk11:alpine-slim
-
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
